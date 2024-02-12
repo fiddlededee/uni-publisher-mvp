@@ -1,7 +1,7 @@
 = UniPublisher
 :toc: left
 :source-highlighter: rouge
-
+:src-root: https://github.com/fiddlededee/uni-publisher-mvp/blob/main
 
 
 == The idea
@@ -22,24 +22,24 @@ The goal of MVP is to test the UniPublisher underlying ideas and implementation 
 
 == Examples description
 
-. link:../../example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
+. link:{src-root}/example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
 +
 [[ps-118]]
-Parses html-files and unites them in one book of A4 format (link:../../example/ps-118/output/ps-118.fodt[fodt], link:../../example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:../../example/ps-118/output/ps-118-ebook.fodt[fodt], link:../../example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format
+Parses html-files and unites them in one book of A4 format (link:{src-root}/example/ps-118/output/ps-118.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:{src-root}/example/ps-118/output/ps-118-ebook.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format
 +
 The text contains Holy Father Interpretaions for Psalm 118, taken from https://bible.optina.ru/. The site uses DokuWiki engine
-. link:../../example/builder/table.main.kts[example/builder/table.main.kts]
+. link:{src-root}/example/builder/table.main.kts[example/builder/table.main.kts]
 +
 [[from-scratch]]
-Builds the letter from json data and converts it to link:../../example/builder/output/letter.fodt[fodt], link:../../example/builder/output/letter.odt[odt], link:../../example/builder/output/letter.pdf[pdf] and link:../../example/builder/output/letter.pdf[docx] formats. Adapted from https://pandoc.org/using-the-pandoc-api.html#builder[Pandoc documentation]
-. link:../../example/customize-everything/customize-everything.main.kts[example/customize-everything/customize-everything.main.kts]
+Builds the letter from json data and converts it to link:{src-root}/example/builder/output/letter.fodt[fodt], link:{src-root}/example/builder/output/letter.odt[odt], link:{src-root}/example/builder/output/letter.pdf[pdf] and link:{src-root}/example/builder/output/letter.pdf[docx] formats. Adapted from https://pandoc.org/using-the-pandoc-api.html#builder[Pandoc documentation]
+. link:{src-root}/example/customize-everything/customize-everything.main.kts[example/customize-everything/customize-everything.main.kts]
 +
 [[customize-everything]]
 Show, how to customize all parts of the converter: reader (parser), model and writer. But the project has many local extension points, so the approach of customizing everything looks excessive in most cases
 
 To run examples you need Kotlin.
 
-All examples in current project are built with link:../../build-all.sh[build-all.sh]
+All examples in current project are built with link:{src-root}/build-all.sh[build-all.sh]
 
 [source, bash]
 ----
