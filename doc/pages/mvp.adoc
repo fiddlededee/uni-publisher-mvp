@@ -1,0 +1,123 @@
+= UniPublisher
+:toc: left
+:source-highlighter: rouge
+
+
+
+== The idea
+
+The idea of this project is to provide light universal tool for automating publishing any markup that has html output to (for now) Open Document.
+
+The project can be easily used as reporting tool if you need text processor (MS Word, LO Writer, PDF) document as an output format.
+
+I included LibreOffice conversion tool, that allows to convert published `fodt` files into other formats like `pdf`, `docx`, `odt`.
+
+This project is highly influenced and inspired by https://github.com/jgm/pandoc[Pandoc] and https://github.com/asciidoctor[Asciidoctor] projects.
+
+The name UniPublisher because (1) it is quite [uni]versal (almost all markups can output html) (2) it can be u
+
+=== The goal of MVP
+
+The goal of MVP is to test the UniPublisher underlying ideas and implementation approach. I would be grateful for any critical comments.sed to [uni]te several sources of documentation into one publishable artifact.
+
+== Examples description
+
+. link:../../example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
++
+[[ps-118]]
+Parses html-files and unites them in one book of A4 format (link:../../example/ps-118/output/ps-118.fodt[fodt], link:../../example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:../../example/ps-118/output/ps-118-ebook.fodt[fodt], link:../../example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format
++
+The text contains Holy Father Interpretaions for Psalm 118, taken from https://bible.optina.ru/. The site uses DokuWiki engine
+. link:../../example/builder/table.main.kts[example/builder/table.main.kts]
++
+[[from-scratch]]
+Builds the letter from json data and converts it to link:../../example/builder/output/letter.fodt[fodt], link:../../example/builder/output/letter.odt[odt], link:../../example/builder/output/letter.pdf[pdf] and link:../../example/builder/output/letter.pdf[docx] formats. Adapted from https://pandoc.org/using-the-pandoc-api.html#builder[Pandoc documentation]
+. link:../../example/customize-everything/customize-everything.main.kts[example/customize-everything/customize-everything.main.kts]
++
+[[customize-everything]]
+Show, how to customize all parts of the converter: reader (parser), model and writer. But the project has many local extension points, so the approach of customizing everything looks excessive in most cases
+
+To run examples you need Kotlin.
+
+All examples in current project are built with link:../../build-all.sh[build-all.sh]
+
+[source, bash]
+----
+include::../../build-all.sh[]
+----
+
+== The main features of U-Pub
+
+=== `HTML` as a source format
+
+`HTML` format is produced by almost all native markup converters and is quite semantic in itself. The result produced by those native converters is usually very similar, so we can create universal reader with some insignificant customization for each markup language. Moreover `HTML` is produced by exactly native converter, so we are sure, that source markup is correctly processed.
+
+If `HTML` doesn't contain some necessary data we can usually tune native converter. For example Asciidoc has an attribute `pdfwidth` that shouldn't necessarily be put into `HTML`. But we can force it to `HTML` extending the converter.
+
+=== Easily manipulated AST
+
+AST transformation with Kotlin is very easy and along with styling mechanism is suggested as the main tool for customizing output. Don't define sections for numerating chapters, just numerate them. Don't define if image caption should be above or below, just place it there. Don't define the way the title page should look, just create it the way you need.
+
+Example: in <<ps-118, example/ps-118/convert-to-pdf.main.kts>> we should convert inner html links into page references.
+
+To achieve this:
+
+. The new model node `RefPage` was defined.
++
+[source, kotlin]
+----
+include::../../example/ps-118/convert-to-pdf.main.kts[tag=custom-node]
+----
+. `HTML` links where necessary were changed to `RefPage` node.
++
+[source, kotlin]
+----
+include::../../example/ps-118/convert-to-pdf.main.kts[tag=inner-links-to-page-reference]
+----
+. Writer for `RefPage` node was added to conversion routine.
++
+[[custom-writer]]
+[source, kotlin, indent=0]
+----
+include::../../example/ps-118/convert-to-pdf.main.kts[tag=ref-page-writer]
+----
+
+We can also build AST <<from-scratch, from scratch>>:
+
+[source, kotlin]
+----
+include::../../example/builder/table.main.kts[tag=letter-builder]
+----
+
+=== Kotlin script as a main automation language
+
+* Kotlin script is a standalone file, that contains dependency declarations. It can be run with `kotlin [kotlin script file]`.
+
+* Kotlin is a statically typed language. Unlike DevOps scripts DocOps scripts are more voluminous, and are more often modified as we change documentation structure rather often. Static typing contributes much to maintainability of such scripts.
+
+* Kotlin is a wrapper language for Java, so you may use the whole Java ecosystem.
+
+* The project can be ported to Kotlin for Javascript and probably to Kotlin Native.
+
+* Kotlin has an excellent support for builder and templating constructions. That allows us to tune the outlook of resulting document by transforming AST in a desirable way. It is a good deal simpler than customizing the outlook with a huge number of options that nobody remembers.
+
+== Extension points
+
+. Unknown html tags can be parsed into generic node with attributes, put in a `Map`. This generic node can be replaced with some specific node during AST transformation
+. Two types of styles are supported:
+** Output nodes style
++
+[source, kotlin, indent=0]
+----
+include::../../example/builder/table.main.kts[tag=odt-style]
+----
+** Writers from scratch (<<custom-writer, custom writer>>)
+. Postprocessing. In the following example for example page and footer parameters are adjusted for electronic book
++
+[source, kotlin, indent=0]
+----
+include::../../example/ps-118/convert-to-pdf.main.kts[tag=post-processing]
+----
+. You can also customize everything as in <<customize-everything, this example>>
+
+

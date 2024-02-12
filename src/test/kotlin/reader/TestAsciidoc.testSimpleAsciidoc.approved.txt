@@ -1,0 +1,9 @@
+Document id=null roles=
+  Header id=_heading_1 roles=
+    text: [Heading 1]
+  Paragraph id=null roles=
+    text: [This paragraph should appear in result]
+  Header id=_heading_2 roles=
+    text: [Heading 2]
+  Paragraph id=null roles=
+    text: [Some more paragraph]
