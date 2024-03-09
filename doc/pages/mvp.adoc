@@ -79,7 +79,7 @@ Don't define sections for numerating chapters, just numerate them.
 Don't define if the image caption should be above or below, just place it there.
 Don't define the way the title page should look, just create it the way you need.
 
-Example: in <<mvp-doc, this example>> HTML is produced with Asciidoctor, which in some cases wraps paragraphs into div.
+In <<mvp-doc, the script, that converts current document to PDF>> HTML is produced with Asciidoctor. Asciidoctor in some cases wraps paragraphs into div.
 If the paragraph has an id it will be inserted into such a div.
 To correctly process such a situation we should either override the default paragraph writer or just transfer id from `<div>` to wrapped `<p>`.
 
