@@ -6,7 +6,7 @@
         <office:text text:use-soft-page-breaks="true">
             <this-tag-should-be-left/>
             
-            <text:p text:style-name="PAMC1">Some paragraph</text:p>
+            <text:p text:style-name="PAMC1">Some<text:s text:c=""/>paragraph</text:p>
             <this-tag-should-be-left/>
         </office:text>
     </office:body>

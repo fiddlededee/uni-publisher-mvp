@@ -37,7 +37,7 @@ open class HtmlReaderCommon(private val node: Node, private val htmlNode: HtmlNo
             }
             if (stepOldCursorNode == cursorNode) {
                 println("WARNING: ${cursorNode?.nodeName()} not detected")
-                println(cursorNode)
+//                println(cursorNode)
                 cursorNode = cursorNode?.nextSibling()
             }
 

@@ -1,13 +1,22 @@
-<root xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+<root xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0">
 	<text:p text:style-name="Text body">
-		Paragraph before
+		Paragraph
+		<text:s text:c="1"/>
+		before
 	</text:p>
 	<text:p>
 		Some text
-		 (Some more text)
+		<text:s text:c="1"/>
+		(Some
+		<text:s text:c="1"/>
+		more
+		<text:s text:c="1"/>
+		text)
 	</text:p>
 	<text:p text:style-name="Text body">
-		Paragraph after
+		Paragraph
+		<text:s text:c="1"/>
+		after
 	</text:p>
 	<text:p text:style-name="Text body">
 		<text:span>
@@ -15,7 +24,12 @@
 			before
 			<text:span>
 				Some text
-				 (Some more text)
+				<text:s text:c="1"/>
+				(Some
+				<text:s text:c="1"/>
+				more
+				<text:s text:c="1"/>
+				text)
 			</text:span>
 			after
 		</text:span>

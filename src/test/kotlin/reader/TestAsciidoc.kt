@@ -27,6 +27,7 @@ class TestAsciidoc {
         """
             .trimIndent()
             .asciidocAsHtml()
+            .apply {println(this)}
             .htmlMarkupAsHtmlNode()
             .selectAtXpath("/html/body")!!
             .parseWithBasic().apply {

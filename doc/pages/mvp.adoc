@@ -1,123 +1,144 @@
-= UniPublisher
+= UniDoc Publisher
 :toc: left
 :source-highlighter: rouge
 :src-root: https://github.com/fiddlededee/uni-publisher-mvp/blob/main
 
-
 == The idea
 
-The idea of this project is to provide light universal tool for automating publishing any markup that has html output to (for now) Open Document.
+If you are tired of struggling with lengthy documentation transformation pipelines, juggling multiple technological stacks just to get decent ODT, DOCX or PDF output, try UniDoc Publisher, the simple and powerful document publishing solution for DocOps engineers!
 
-The project can be easily used as reporting tool if you need text processor (MS Word, LO Writer, PDF) document as an output format.
+UniDoc Publisher is a highly customizable Kotlin library that provides a comprehensive set of tools to parse HTML files into abstract syntax tree (AST), transform it in any desirable way and render the Open Document flat format (FODT).
+The latter you can convert to PDF or DOCX with LibreOffice.
 
-I included LibreOffice conversion tool, that allows to convert published `fodt` files into other formats like `pdf`, `docx`, `odt`.
+UniDoc Publisher is heavily influenced by Pandoc.
+Unlike Pandoc, UniDoc Publisher allows you to perform almost all necessary steps within a single Kotlin script.
+Plus, UniDoc Publisher's heavy reliance on Kotlin DSL constructions means you'll have unlimited power to customize output on the parser, transformation, and writer sides.
 
-This project is highly influenced and inspired by https://github.com/jgm/pandoc[Pandoc] and https://github.com/asciidoctor[Asciidoctor] projects.
+True, UniDoc Publisher accepts only HTML as a source but all text markups produce HTML and some common markups, such as Asciidoc and Markdown have Java converters that enable you to get the source HTML within this same Kotlin script.
 
-The name UniPublisher because (1) it is quite [uni]versal (almost all markups can output html) (2) it can be u
+UniDoc Publisher has been designed with ease of use in mind, so you can focus on getting the job done without getting bogged down in complicated syntax or lengthy code.
+
+The prefix [Uni] means UniDoc Publisher (1) is quite [uni]versal (almost all markups can output HTML) (2) can [uni]te several sources of documentation.
 
 === The goal of MVP
 
-The goal of MVP is to test the UniPublisher underlying ideas and implementation approach. I would be grateful for any critical comments.sed to [uni]te several sources of documentation into one publishable artifact.
+The goal of MVP is to test the UniPublisher underlying ideas and implementation approach.
+I would be grateful for any critical comments.
 
 == Examples description
 
+. link:{src-root}/example/mvp-doc/mvp-doc.main.kts[example/mvp-doc/mvp-doc.main.kts]
++
+[[mvp-doc]]
+Creates FODT file for this document from Asciidoc file link:{src-root}/doc/pages/mvp-doc.adoc[/doc/pages/mvp-doc.adoc].
 . link:{src-root}/example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
 +
 [[ps-118]]
-Parses html-files and unites them in one book of A4 format (link:{src-root}/example/ps-118/output/ps-118.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:{src-root}/example/ps-118/output/ps-118-ebook.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format
+Parses HTML-files and unites them in one book of A4 format (link:{src-root}/example/ps-118/output/ps-118.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:{src-root}/example/ps-118/output/ps-118-ebook.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format.
 +
-The text contains Holy Father Interpretaions for Psalm 118, taken from https://bible.optina.ru/. The site uses DokuWiki engine
+The text contains Holy Father Interpretaions for Psalm 118, taken from https://bible.optina.ru/.
+The site uses DokuWiki engine.
 . link:{src-root}/example/builder/table.main.kts[example/builder/table.main.kts]
 +
 [[from-scratch]]
-Builds the letter from json data and converts it to link:{src-root}/example/builder/output/letter.fodt[fodt], link:{src-root}/example/builder/output/letter.odt[odt], link:{src-root}/example/builder/output/letter.pdf[pdf] and link:{src-root}/example/builder/output/letter.pdf[docx] formats. Adapted from https://pandoc.org/using-the-pandoc-api.html#builder[Pandoc documentation]
+Builds the letter from JSON data and converts it to link:{src-root}/example/builder/output/letter.fodt[fodt], link:{src-root}/example/builder/output/letter.odt[odt], link:{src-root}/example/builder/output/letter.pdf[pdf] and link:{src-root}/example/builder/output/letter.pdf[docx] formats.
+Adapted from https://pandoc.org/using-the-pandoc-api.html#builder[Pandoc documentation].
 . link:{src-root}/example/customize-everything/customize-everything.main.kts[example/customize-everything/customize-everything.main.kts]
 +
 [[customize-everything]]
-Show, how to customize all parts of the converter: reader (parser), model and writer. But the project has many local extension points, so the approach of customizing everything looks excessive in most cases
+Show, how to customize all parts of the converter: reader (parser), model and writer.
+But the project has many local extension points, so the approach of customizing everything looks excessive in most cases.
 
-To run examples you need Kotlin.
+To run examples you need the Kotlin compiler.
 
-All examples in current project are built with link:{src-root}/build-all.sh[build-all.sh]
+All examples in the current project are built with link:{src-root}/build-all.sh[build-all.sh]
 
-[source, bash]
+[source,bash]
 ----
 include::../../build-all.sh[]
 ----
 
 == The main features of U-Pub
 
-=== `HTML` as a source format
+=== HTML as a source format
 
-`HTML` format is produced by almost all native markup converters and is quite semantic in itself. The result produced by those native converters is usually very similar, so we can create universal reader with some insignificant customization for each markup language. Moreover `HTML` is produced by exactly native converter, so we are sure, that source markup is correctly processed.
+HTML format is produced by almost all native markup converters, and it is quite semantic in itself.
 
-If `HTML` doesn't contain some necessary data we can usually tune native converter. For example Asciidoc has an attribute `pdfwidth` that shouldn't necessarily be put into `HTML`. But we can force it to `HTML` extending the converter.
+The result produced by those native converters is usually very similar, so we can create a universal reader with minimal customization for each markup language. Moreover, HTML is produced by exactly the native converter, so we are sure, that the source markup is correctly processed.
+
+If HTML doesn't contain some necessary data, we can usually tune the native converter.
+For example, Asciidoc has an attribute `pdfwidth` that shouldn't necessarily be put into HTML.
+But we can force it to HTML extending the converter.
+
+Despite styles for HTML and printing format may differ significantly, we can reuse at least part of CSS styles in a printing document. For example, the code in this document is highlighted with Rouge. The styles are produced directly from the CSS, created with `rougify` command.
 
 === Easily manipulated AST
 
-AST transformation with Kotlin is very easy and along with styling mechanism is suggested as the main tool for customizing output. Don't define sections for numerating chapters, just numerate them. Don't define if image caption should be above or below, just place it there. Don't define the way the title page should look, just create it the way you need.
+AST transformation with Kotlin is very easy, and along with the styling mechanism, it is suggested as the main tool for customizing output.
+Don't define sections for numerating chapters, just numerate them.
+Don't define if the image caption should be above or below, just place it there.
+Don't define the way the title page should look, just create it the way you need.
 
-Example: in <<ps-118, example/ps-118/convert-to-pdf.main.kts>> we should convert inner html links into page references.
+Example: in <<mvp-doc, this example>> HTML is produced with Asciidoctor, which in some cases wraps paragraphs into div.
+If the paragraph has an id it will be inserted into such a div.
+To correctly process such a situation we should either override the default paragraph writer or just transfer id from `<div>` to wrapped `<p>`.
 
-To achieve this:
-
-. The new model node `RefPage` was defined.
-+
-[source, kotlin]
+[source,kotlin]
 ----
-include::../../example/ps-118/convert-to-pdf.main.kts[tag=custom-node]
-----
-. `HTML` links where necessary were changed to `RefPage` node.
-+
-[source, kotlin]
-----
-include::../../example/ps-118/convert-to-pdf.main.kts[tag=inner-links-to-page-reference]
-----
-. Writer for `RefPage` node was added to conversion routine.
-+
-[[custom-writer]]
-[source, kotlin, indent=0]
-----
-include::../../example/ps-118/convert-to-pdf.main.kts[tag=ref-page-writer]
+include::../../example/mvp-doc/mvp-doc.main.kts[tag=id-div-to-paragraph,indent=0]
 ----
 
-We can also build AST <<from-scratch, from scratch>>:
+We can also build an AST <<from-scratch, from scratch>>:
 
-[source, kotlin]
+[source,kotlin]
 ----
 include::../../example/builder/table.main.kts[tag=letter-builder]
 ----
 
-=== Kotlin script as a main automation language
+=== Kotlin script as the main automation language
 
-* Kotlin script is a standalone file, that contains dependency declarations. It can be run with `kotlin [kotlin script file]`.
+* Kotlin script is a standalone file, that contains dependency declarations.
+It can be run with `kotlin [kotlin script file]`.
 
-* Kotlin is a statically typed language. Unlike DevOps scripts DocOps scripts are more voluminous, and are more often modified as we change documentation structure rather often. Static typing contributes much to maintainability of such scripts.
+* Kotlin is a statically typed language.
+Unlike DevOps scripts, DocOps scripts are more voluminous, and are more often modified as we change documentation structure rather often.
+Static typing contributes greatly to the maintainability of such scripts.
 
 * Kotlin is a wrapper language for Java, so you may use the whole Java ecosystem.
 
-* The project can be ported to Kotlin for Javascript and probably to Kotlin Native.
+* The project can be ported to Kotlin for JavaScript and probably to Kotlin Native.
 
-* Kotlin has an excellent support for builder and templating constructions. That allows us to tune the outlook of resulting document by transforming AST in a desirable way. It is a good deal simpler than customizing the outlook with a huge number of options that nobody remembers.
+* Kotlin has an excellent support for builder and templating constructions, that that allows us to tune the outlook of resulting document by transforming AST in a desirable way.
+It is a good deal simpler than customizing the outlook with a huge number of options that nobody remembers.
 
 == Extension points
 
-. Unknown html tags can be parsed into generic node with attributes, put in a `Map`. This generic node can be replaced with some specific node during AST transformation
+. Unknown HTML tags can be parsed into a generic node with attributes, put in a `Map`.
+This generic node can be replaced with some specific node during the AST transformation.
 . Two types of styles are supported:
 ** Output nodes style
 +
-[source, kotlin, indent=0]
+The following example stylizes a common table cell. The bottom padding is left with 0 value, because the indent after the in-cell last paragraph will create the necessary padding.
++
+[source,kotlin,indent=0]
 ----
 include::../../example/builder/table.main.kts[tag=odt-style]
 ----
-** Writers from scratch (<<custom-writer, custom writer>>)
-. Postprocessing. In the following example for example page and footer parameters are adjusted for electronic book
+** Writers from scratch
 +
-[source, kotlin, indent=0]
+In the following example a writer for some custom PageRef node is defined. This writer outputs the page number of the referenced element.
++
+[source,kotlin,indent=0]
+----
+include::../../example/ps-118/convert-to-pdf.main.kts[tag=ref-page-writer, indent=0]
+----
+. Postprocessing.
+In the following example the page and footer parameters are adjusted for an electronic book view.
++
+[source,kotlin,indent=0]
 ----
 include::../../example/ps-118/convert-to-pdf.main.kts[tag=post-processing]
 ----
-. You can also customize everything as in <<customize-everything, this example>>
+. You can also customize everything as in <<customize-everything, this example>>.
 
 

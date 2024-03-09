@@ -15,6 +15,8 @@ abstract class Node() {
     // todo: ancestors(), nextSiblings(), previousSiblings()
     // todo: is firtst, is last
     var id: String? = null
+    var sourceTagName: String? = null
+    var sourceAttributes: Map<String, String> = mapOf()
 
 
     @get:JsonIgnore
@@ -134,6 +136,44 @@ abstract class Node() {
 
     fun descendant(filter: (Node) -> Boolean = { true }): ArrayList<Node> {
         return arrayListOf<Node>().apply { fillWithDescendants(this@Node, filter) }
+    }
+
+    fun ancestor(filter: (Node) -> Boolean = { true }): ArrayList<Node> {
+        val ancestors = arrayListOf<Node>()
+        var parent = this@Node.parent()
+        while (parent != null) {
+            if (filter.invoke(parent)) ancestors.add(parent)
+            parent = parent.parent()
+        }
+        return ancestors
+    }
+
+    fun nextSibling(filter: (Node) -> Boolean = { true }): ArrayList<Node> {
+        val nextSibling = arrayListOf<Node>()
+        val parent = this.parent() ?: return nextSibling
+        if (parent.children.indexOf(this) == parent.children.size - 1) return nextSibling
+        IntRange(parent.children.indexOf(this) + 1, parent.children.size - 1).forEach {
+            if (filter(parent.children[it])) nextSibling.add(parent.children[it])
+        }
+        return nextSibling
+    }
+
+    fun hasNext(): Boolean {
+        val parent = this.parent() ?: throw Exception("The ${this::class.java.simpleName} has no parent")
+        return (parent.children.indexOf(this) != parent.children.size - 1)
+    }
+
+    fun next(): Node {
+        val parent = this.parent() ?: throw Exception("The ${this::class.java.simpleName} has no parent")
+        if (parent.children.indexOf(this) == parent.children.size - 1)
+            throw Exception("The ${this::class.java.simpleName} is last")
+        return parent.children[parent.children.indexOf(this) + 1]
+    }
+
+    fun index(): Int {
+        val parent = this.parent()
+            ?: throw Exception("The ${this::class.java.simpleName} node has no parent")
+        return parent.children.indexOf(this)
     }
 
     fun children(filter: (Node) -> Boolean = { true }): ArrayList<Node> {

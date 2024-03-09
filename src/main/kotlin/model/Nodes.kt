@@ -28,7 +28,20 @@ class OpenBlock() : Node() {
     }
 }
 
-class Col (var width : Width)
+class Col (var width : Width) : Node() {
+    override val isInline: Boolean get() = false
+    override fun write(bw: BackendWriter) {
+        bw.write(this)
+    }
+}
+
+
+class ColGroup  : Node() {
+    override val isInline: Boolean get() = false
+    override fun write(bw: BackendWriter) {
+        bw.write(this)
+    }
+}
 
 enum class WidthUnit { rel, mm }
 
@@ -124,6 +137,22 @@ class Paragraph() : Node() {
         bw.write(this)
     }
 }
+
+// Look like excessive
+//class Pre() : Node() {
+//    override val isInline: Boolean get() = false
+//    override fun write(bw: BackendWriter) {
+//        bw.write(this)
+//    }
+//}
+//
+//class Code() : Node() {
+//    override val isInline: Boolean get() = false
+//    override fun write(bw: BackendWriter) {
+//        bw.write(this)
+//    }
+//}
+
 
 class Span() : Node() {
     override val isInline: Boolean get() = true

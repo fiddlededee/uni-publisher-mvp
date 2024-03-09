@@ -7,12 +7,13 @@ open class GenericHtmlReader(
     private val observedClassList: Set<String> = setOf(),
 ) : HtmlReaderCommon(node, htmlNode) {
 
-    fun parseNode(astNode: Node, htmlNode: HtmlNode) {
-        GenericHtmlReader(astNode, htmlNode, observedClassList).iterateAll()
+    fun parseNode(astNode: Node, confirmedHtmlNode: HtmlNode) {
+        GenericHtmlReader(astNode, confirmedHtmlNode, observedClassList).iterateAll()
     }
 
     fun Node.setBasics(htmlNode: HtmlNode): Node {
         this.id = htmlNode.id()
+        this.roles += htmlNode.classNames()
         return this
     }
 
@@ -21,12 +22,16 @@ open class GenericHtmlReader(
         ::detectTable,
         ::detectRowGroup,
         ::detectRow,
+        ::detectColGroup,
+        ::detectCol,
         ::detectCell,
         ::detectOl,
         ::detectUl,
         ::detectLi,
         ::detectH,
         ::detectP,
+        ::detectPre,
+        ::detectCode,
         ::passOtherDiv,
         ::passComment,
         ::passHr,
@@ -60,7 +65,7 @@ open class GenericHtmlReader(
             it.nodeName() == "div" && (it.hasAttr("id") || it.classNames().intersect(observedClassList).isNotEmpty())
         }) { confirmedHtmlNode ->
             val newOpenBlock = OpenBlock().setBasics(confirmedHtmlNode)
-            newOpenBlock.roles += confirmedHtmlNode.classNames().intersect(observedClassList)
+//            newOpenBlock.roles += confirmedHtmlNode.classNames().intersect(observedClassList)
             parseNode(addToAST(newOpenBlock), confirmedHtmlNode)
         }
     }
@@ -96,11 +101,29 @@ open class GenericHtmlReader(
         }
     }
 
+    open fun detectColGroup() {
+        detectByExpression({ it.nodeName() == "colgroup" }) { confirmedNode ->
+            parseNode(addToAST(ColGroup()), confirmedNode)
+        }
+    }
+
+    open fun detectCol() {
+        detectByExpression({ it.nodeName() == "col" }) { confirmedNode ->
+            val width =
+                if (confirmedNode.hasAttr("width")) {
+                    val widthAttrValue = confirmedNode.attr("width")
+                    """[0-9]""".toRegex().matchEntire(widthAttrValue)?.value?.toFloat() ?: 1F
+                } else 1F
+            parseNode(addToAST(Col(Width(width))), confirmedNode)
+        }
+    }
+
     open fun detectOl() {
         detectByExpression({ it.nodeName() == "ol" }) { confirmedNode ->
             parseNode(addToAST(OrderedList()), confirmedNode)
         }
     }
+
     open fun detectUl() {
         detectByExpression({ it.nodeName() == "ul" }) { confirmedNode ->
             parseNode(addToAST(UnorderedList()), confirmedNode)
@@ -124,14 +147,31 @@ open class GenericHtmlReader(
 
     open fun detectP() {
         detectByExpression({ it.nodeName() == "p" }) { confirmedNode ->
-            parseNode(addToAST(Paragraph()), confirmedNode)
+            parseNode(addToAST(Paragraph().setBasics(confirmedNode)), confirmedNode)
+        }
+    }
+
+    open fun detectPre() {
+        detectByExpression({ it.nodeName() == "pre" }) { confirmedNode ->
+            parseNode(addToAST(Paragraph().apply { roles("pre"); sourceTagName = "pre" }), confirmedNode)
+        }
+    }
+
+    open fun detectCode() {
+        detectByExpression({ it.nodeName() == "code" }) { confirmedNode ->
+            parseNode(addToAST(OpenBlock().apply { roles("code") }), confirmedNode)
         }
     }
 
     open fun detectSpan() {
-        val spanTypes = "strong|em|i|span".split("|")
+        val spanTypes = "strong|em|i|span|br".split("|")
         detectByExpression({ spanTypes.contains(it.nodeName()) }) { confirmedHtmlNode ->
-            val newSpan = Span().apply { roles.add(confirmedHtmlNode.nodeName()) }
+            val newSpan = Span().apply {
+                sourceTagName = confirmedHtmlNode.nodeName()
+                roles.add(confirmedHtmlNode.nodeName())
+                setBasics(confirmedHtmlNode)
+                if (confirmedHtmlNode.nodeName() == "br") +"\n"
+            }
             parseNode(addToAST(newSpan), confirmedHtmlNode)
         }
     }

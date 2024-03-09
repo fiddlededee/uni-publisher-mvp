@@ -4,9 +4,9 @@ import model.Document
 import model.Header
 import model.Paragraph
 import org.approvaltests.Approvals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.redundent.kotlin.xml.xml
-import kotlin.test.assertEquals
 
 class TestWriter {
 

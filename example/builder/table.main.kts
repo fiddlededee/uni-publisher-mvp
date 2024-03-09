@@ -50,13 +50,16 @@ val letterAst = Document().apply {
         repeat(3) { col(Width(1F)) }
         tableRowGroup(TRG.head) {
             tr {
-                arrayOf("Station", "Address", "Cards Accepted").forEach { td { p { +it } } }
+                arrayOf("Station", "Address", "Cards Accepted")
+                    .forEach { td { p { +it } } }
             }
         }
         stations.forEach { station ->
             tr {
-                arrayOf(station.stationName, station.streetAddress, station.cardsAccepted)
-                    .forEach { td { p { +it } } }
+                arrayOf(
+                    station.stationName, station.streetAddress,
+                    station.cardsAccepted
+                ).forEach { td { p { +it } } }
             }
         }
     }

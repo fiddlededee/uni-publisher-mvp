@@ -1,14 +1,22 @@
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import model.Node
 import org.approvaltests.Approvals
-
-fun Node.toYamlString() : String {
-    return ObjectMapper(YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER))
-        .writeValueAsString(this)
-}
+import org.junit.jupiter.api.Assertions
+import kotlin.reflect.KClass
 
 fun String.verify() {
     Approvals.verify(this)
 }
+
+infix fun <T> T.shouldBe(to: T) {
+    Assertions.assertEquals(to, this)
+}
+
+fun ArrayList<Node>.nodeSequence(): String {
+    return this.joinToString(" -> ") { it::class.java.simpleName }
+}
+
+fun ArrayList<Node>.nodeRolesSequence(): String {
+    return this.joinToString(" -> ") { it.roles.joinToString(", ") }
+}
+
+

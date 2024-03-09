@@ -13,7 +13,7 @@ group = "ru.fiddlededee"
 version = "0.6"
 
 dependencies {
-    testImplementation(kotlin("example"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     testImplementation("com.approvaltests:approvaltests:18.5.0")
     testImplementation("org.asciidoctor:asciidoctorj:2.5.7")
     implementation("org.jsoup:jsoup:1.17.1")

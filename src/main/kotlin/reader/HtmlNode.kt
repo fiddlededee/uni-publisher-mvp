@@ -5,6 +5,7 @@ import org.jsoup.nodes.Node as JsoupNode
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import org.jsoup.parser.Parser
 
 class HtmlNode(private val jsoupNode: JsoupNode) {
     constructor(doc: String) : this(Jsoup.parse(doc))
@@ -14,8 +15,7 @@ class HtmlNode(private val jsoupNode: JsoupNode) {
     }
 
     fun id(): String? {
-        return if (jsoupNode.hasAttr("id"))
-            jsoupNode.attr("id") else null
+        return if (jsoupNode.hasAttr("id")) jsoupNode.attr("id") else null
     }
 
     fun isText(): Boolean {
@@ -51,12 +51,12 @@ class HtmlNode(private val jsoupNode: JsoupNode) {
     }
 
     fun nodeText(): String? {
-        return if (jsoupNode is TextNode) jsoupNode.toString() else null
+        return if (jsoupNode is TextNode)
+            Parser.unescapeEntities(jsoupNode.toString(), true) else null
     }
 
     fun selectAtXpath(xpath: String): HtmlNode? {
-        return if (jsoupNode is Element && jsoupNode.selectXpath(xpath)[0] != null)
-            HtmlNode(jsoupNode.selectXpath(xpath)[0])
+        return if (jsoupNode is Element && jsoupNode.selectXpath(xpath)[0] != null) HtmlNode(jsoupNode.selectXpath(xpath)[0])
         else null
     }
 
@@ -80,13 +80,11 @@ class HtmlNode(private val jsoupNode: JsoupNode) {
     fun matchByExpression(
         expression: (htmlNode: HtmlNode) -> Boolean
     ): Pair<HtmlNode?, HtmlNode?> {
-        val parentJsoupNode =
-            if (jsoupNode.parentNode() is Element) jsoupNode.parentNode() as Element
-            else return (Pair(null, null))
+        val parentJsoupNode = if (jsoupNode.parentNode() is Element) jsoupNode.parentNode() as Element
+        else return (Pair(null, null))
         val matchedNode = if (expression.invoke(this)) this else null
         val nextJsoupNodeSibling = matchedNode?.jsoupNode?.nextSibling()
-        val nextHtmlNodeSibling =
-            if (nextJsoupNodeSibling != null) HtmlNode(nextJsoupNodeSibling) else null
+        val nextHtmlNodeSibling = if (nextJsoupNodeSibling != null) HtmlNode(nextJsoupNodeSibling) else null
         return Pair(matchedNode, nextHtmlNodeSibling)
     }
 

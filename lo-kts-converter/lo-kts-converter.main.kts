@@ -14,14 +14,20 @@ import com.sun.star.bridge.XBridgeFactory
 import com.sun.star.comp.helper.Bootstrap
 import com.sun.star.connection.XConnection
 import com.sun.star.connection.XConnector
+import com.sun.star.container.XEnumerationAccess
+import com.sun.star.frame.DispatchHelper
 import com.sun.star.frame.XComponentLoader
 import com.sun.star.frame.XDesktop
+import com.sun.star.frame.XDispatchHelper
+import com.sun.star.frame.XDispatchProvider
 import com.sun.star.frame.XStorable
 import com.sun.star.lang.XComponent
 import com.sun.star.lang.XMultiComponentFactory
 import com.sun.star.text.XDocumentIndex
 import com.sun.star.text.XDocumentIndexesSupplier
 import com.sun.star.text.XTextDocument
+import com.sun.star.text.XTextField
+import com.sun.star.text.XTextFieldsSupplier
 import com.sun.star.uno.UnoRuntime
 import com.sun.star.uno.XComponentContext
 import com.xenomachina.argparser.ArgParser
@@ -69,11 +75,15 @@ val outputDocBasePath = matchedDocBasePath?.value ?: inputDoc
 val xContext = socketContext()
 val xMCF: XMultiComponentFactory? = xContext.serviceManager
 //val available = if (xMCF != null) "available" else "not available"
+
+//val helper = createInstanceMCF(XDispatchHelper.class, "com.sun.star.frame.DispatchHelper");
+val dispatcherHelper = xMCF!!.createInstanceWithContext("com.sun.star.frame.DispatchHelper", xContext)!!
+val xDispatcherHelper = qi(XDispatchHelper::class.java, dispatcherHelper)
 val desktop: Any = xMCF!!.createInstanceWithContext("com.sun.star.frame.Desktop", xContext)
 val xDeskop = qi(XDesktop::class.java, desktop)
 val xComponentLoader = qi(XComponentLoader::class.java, desktop)
 val loadProps = arrayOf<PropertyValue>()
-lateinit var component: XComponent
+var component: XComponent
 try {
     component = xComponentLoader.loadComponentFromURL(fnmToURL(inputDoc), "_blank", 0, loadProps)
 } catch (e: Exception) {
@@ -87,6 +97,7 @@ try {
     exitProcess(-1)
 }
 val xTextDocument = qi(XTextDocument::class.java, component)
+val xDispatchProvider = qi(XDispatchProvider::class.java, xDeskop.currentFrame)
 
 // Update indexes
 val indexes = qi(XDocumentIndexesSupplier::class.java, xTextDocument)
@@ -95,6 +106,9 @@ for (i in 0..indexes.documentIndexes.count - 1) {
     index.update()
 }
 println("INFO: Indexes updated")
+
+xDispatcherHelper.executeDispatch(xDispatchProvider, ".uno:UpdateFields", "", 0, arrayOf<PropertyValue>())
+println("INFO: Fields updated")
 
 val xStorable = qi(XStorable::class.java, component)
 val saveProps = Array(2) { PropertyValue() }

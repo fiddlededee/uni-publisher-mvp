@@ -162,6 +162,7 @@ val basicOdtStyleList = OdtStyleList(
             "text:bookmark-ref" {
                 attribute("text:reference-format", "page")
                 attribute("text:ref-name", it.href)
+                // The value to be shown if fields are not updated
                 -"-"
             }
         }
@@ -219,7 +220,7 @@ val ebookOdtStyleList = OdtStyleList(OdtStyle {
 }).add(basicOdtStyleList)
 
 // Hyphenations for electronic book added
-var h : Hyphenator = Hyphenator.getInstance(HyphenationPattern.lookup("ru"))
+var h: Hyphenator = Hyphenator.getInstance(HyphenationPattern.lookup("ru"))
 combinedAST.descendant { it is Text }.map { it as Text }.forEach { textNode ->
     textNode.text =
         textNode.text.replace("""[а-яА-Я]?[а-я]+""".toRegex()) { h.hyphenate(it.value).joinToString("\u00AD") }
@@ -239,7 +240,8 @@ fodtConverter.apply {
                 "margin-bottom" to "3mm", "margin-left" to "2mm",
             ).forEach { el.setAttributeNS(foNS, it.first, it.second) }
         }
-        xpath("//style:footer-style/style:header-footer-properties").iterable().map { it as Element }
+        xpath("//style:footer-style/style:header-footer-properties").iterable()
+            .map { it as Element }
             .forEach { element -> element.setAttributeNS(foNS, "margin-top", "2mm") }
     }
     // end::post-processing[]

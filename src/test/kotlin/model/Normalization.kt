@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import org.approvaltests.Approvals
 import org.junit.jupiter.api.Test
-import toYamlString
 import verify
 
 class Normalization {

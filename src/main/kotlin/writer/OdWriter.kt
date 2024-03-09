@@ -45,7 +45,7 @@ open class OdWriter(
                         // Open Document doesn't allow to mix rel and absolute units like html
                         // And we can't render styles to understand widths
                         // The approximate algorithm needed that ignores paddings
-                        val relColumnWidth = it.width.value.roundToInt()*100
+                        val relColumnWidth = it.width.value.roundToInt() * 100
                         tableProperties { attribute("style:rel-column-width", "$relColumnWidth*") }
                     }
                 }
@@ -79,6 +79,9 @@ open class OdWriter(
             }
         }
     }
+
+    override fun write(colGroup: ColGroup) {}
+    override fun write(col: Col) {}
 
     override fun write(ol: OrderedList) {
         preOdNode.apply {
@@ -128,7 +131,10 @@ open class OdWriter(
     override fun write(p: Paragraph) {
         preOdNode.apply {
             "text:p" {
-                attribute("text:style-name", "Text body")
+                when (p.sourceTagName) {
+                    "pre" -> attribute("text:style-name", "Preformatted Text")
+                    else -> attribute("text:style-name", "Text body")
+                }
                 val id = p.id
                 if (id != null) {
                     "text:bookmark" { attribute("text:name", id) }
@@ -137,6 +143,18 @@ open class OdWriter(
             }
         }
     }
+
+//    override fun write(pre: Pre) {
+//        preOdNode.apply {
+//            process(pre)
+//        }
+//    }
+//
+//    override fun write(code: Code) {
+//        preOdNode.apply {
+//            process(code)
+//        }
+//    }
 
     override fun write(doc: Document) {
         preOdNode.apply {
@@ -147,13 +165,27 @@ open class OdWriter(
     override fun write(text: Text) {
         preOdNode.apply {
             // todo: bug in XML builder?, outputs nothing for space between tags
-            if (text.text == " ") {
-                "text:s" {
-                    attribute("text:c", "1")
+            var textChunk = ""
+            text.text.map { it.toString() }.forEachIndexed { i, character ->
+                if (character == " ") {
+                    if (i != 0 && text.text[i - 1].toString() != " "
+                        && i < text.text.length - 1 && text.text[i + 1].toString() != " "
+                    ) {
+                        textChunk += " "
+                    } else {
+                        -textChunk
+                        textChunk = ""
+                        "text:s" { attribute("text:c", "1") }
+                    }
+                } else if (character == "\n") {
+                    -textChunk
+                    textChunk = ""
+                    "text:line-break" {}
+                } else {
+                    textChunk += character
                 }
-            } else {
-                -text.text
             }
+            if (textChunk != "") -textChunk
         }
     }
 
