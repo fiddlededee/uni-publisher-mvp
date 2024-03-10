@@ -233,13 +233,14 @@ fodtConverter.apply {
     // Final file postprocessed, the better idea here would be to preprocess template
     // tag::post-processing[]
     fodtGenerator?.enrichedTemplate?.apply {
-        xpath("//style:page-layout-properties").iterable().map { it as Element }.forEach { el ->
-            arrayOf(
-                "page-width" to "105mm", "page-height" to "148mm",
-                "margin-top" to "2mm", "margin-right" to "2mm",
-                "margin-bottom" to "3mm", "margin-left" to "2mm",
-            ).forEach { el.setAttributeNS(foNS, it.first, it.second) }
-        }
+        xpath("//style:page-layout-properties").iterable()
+            .map { it as Element }.forEach { el ->
+                arrayOf(
+                    "page-width" to "105mm", "page-height" to "148mm",
+                    "margin-top" to "2mm", "margin-right" to "2mm",
+                    "margin-bottom" to "3mm", "margin-left" to "2mm",
+                ).forEach { el.setAttributeNS(foNS, it.first, it.second) }
+            }
         xpath("//style:footer-style/style:header-footer-properties").iterable()
             .map { it as Element }
             .forEach { element -> element.setAttributeNS(foNS, "margin-top", "2mm") }

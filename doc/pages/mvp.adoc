@@ -25,12 +25,12 @@ The prefix [Uni] means UniDoc Publisher (1) is quite [uni]versal (almost all mar
 The goal of MVP is to test the UniPublisher underlying ideas and implementation approach.
 I would be grateful for any critical comments.
 
-== Examples description
+== Examples
 
 . link:{src-root}/example/mvp-doc/mvp-doc.main.kts[example/mvp-doc/mvp-doc.main.kts]
 +
 [[mvp-doc]]
-Creates FODT file for this document from Asciidoc file link:{src-root}/doc/pages/mvp-doc.adoc[/doc/pages/mvp-doc.adoc].
+Creates FODT file for this document from Asciidoc file link:{src-root}/doc/pages/mvp-doc.adoc[/doc/pages/mvp.adoc].
 . link:{src-root}/example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
 +
 [[ps-118]]
@@ -46,7 +46,7 @@ Adapted from https://pandoc.org/using-the-pandoc-api.html#builder[Pandoc documen
 . link:{src-root}/example/customize-everything/customize-everything.main.kts[example/customize-everything/customize-everything.main.kts]
 +
 [[customize-everything]]
-Show, how to customize all parts of the converter: reader (parser), model and writer.
+Shows, how to customize all parts of the converter: reader (parser), model and writer.
 But the project has many local extension points, so the approach of customizing everything looks excessive in most cases.
 
 To run examples you need the Kotlin compiler.
