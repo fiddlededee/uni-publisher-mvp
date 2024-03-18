@@ -159,7 +159,7 @@ open class GenericHtmlReader(
 
     open fun detectCode() {
         detectByExpression({ it.nodeName() == "code" }) { confirmedNode ->
-            parseNode(addToAST(OpenBlock().apply { roles("code") }), confirmedNode)
+            parseNode(addToAST(Span().apply { roles("code") }), confirmedNode)
         }
     }
 

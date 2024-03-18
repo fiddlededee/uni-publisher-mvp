@@ -18,26 +18,27 @@ True, UniDoc Publisher accepts only HTML as a source but all text markups produc
 
 UniDoc Publisher has been designed with ease of use in mind, so you can focus on getting the job done without getting bogged down in complicated syntax or lengthy code.
 
+UniDoc Publisher supersedes https://github.com/CourseOrchestra/asciidoctor-open-document[Open Document converter for Asciidoctor]. Despite now it is designed to publish any text markup, https://docs.asciidoctor.org/asciidoc/latest/[Asciidoc] IMHO is the best and most universal simple text markup with a very well-designed and extensible converter (https://docs.asciidoctor.org/asciidoctor/latest/[Asciidoctor]), large ecosystem and a great community.
+
 The prefix [Uni] means UniDoc Publisher (1) is quite [uni]versal (almost all markups can output HTML) (2) can [uni]te several sources of documentation.
 
 === The goal of MVP
 
-The goal of MVP is to test the UniPublisher underlying ideas and implementation approach.
-I would be grateful for any critical comments.
+The goal of MVP is to test the UniPublisher underlying ideas and implementation approach. I{nbsp}would be grateful for any critical comments.
 
 == Examples
 
 . link:{src-root}/example/mvp-doc/mvp-doc.main.kts[example/mvp-doc/mvp-doc.main.kts]
 +
 [[mvp-doc]]
-Creates FODT file for this document from Asciidoc file link:{src-root}/doc/pages/mvp-doc.adoc[/doc/pages/mvp.adoc].
+Creates FODT file for this document from Asciidoc file link:{src-root}/doc/pages/mvp.adoc[/doc/pages/mvp.adoc].
 . link:{src-root}/example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
 +
 [[ps-118]]
 Parses HTML-files and unites them in one book of A4 format (link:{src-root}/example/ps-118/output/ps-118.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:{src-root}/example/ps-118/output/ps-118-ebook.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format.
 +
 The text contains Holy Father Interpretaions for Psalm 118, taken from https://bible.optina.ru/.
-The site uses DokuWiki engine.
+The site is made with the https://www.dokuwiki.org/[DokuWiki] engine.
 . link:{src-root}/example/builder/table.main.kts[example/builder/table.main.kts]
 +
 [[from-scratch]]
@@ -70,7 +71,7 @@ If HTML doesn't contain some necessary data, we can usually tune the native conv
 For example, Asciidoc has an attribute `pdfwidth` that shouldn't necessarily be put into HTML.
 But we can force it to HTML extending the converter.
 
-Despite styles for HTML and printing format may differ significantly, we can reuse at least part of CSS styles in a printing document. For example, the code in this document is highlighted with Rouge. The styles are produced directly from the CSS, created with `rougify` command.
+Styles for HTML and printing format may differ significantly, still we often need to reuse at least part of CSS styles in a printing document. For example, the code in this document is highlighted with Rouge. The styles are produced directly from the CSS, created with `rougify` command.
 
 === Easily manipulated AST
 
@@ -79,7 +80,7 @@ Don't define sections for numerating chapters, just numerate them.
 Don't define if the image caption should be above or below, just place it there.
 Don't define the way the title page should look, just create it the way you need.
 
-In <<mvp-doc, the script, that converts current document to PDF>> HTML is produced with Asciidoctor. Asciidoctor in some cases wraps paragraphs into div.
+In <<mvp-doc, the script, that converts current document to PDF>>, HTML is produced with Asciidoctor. Asciidoctor in some cases wraps paragraphs into div.
 If the paragraph has an id it will be inserted into such a div.
 To correctly process such a situation we should either override the default paragraph writer or just transfer id from `<div>` to wrapped `<p>`.
 
@@ -98,7 +99,7 @@ include::../../example/builder/table.main.kts[tag=letter-builder]
 === Kotlin script as the main automation language
 
 * Kotlin script is a standalone file, that contains dependency declarations.
-It can be run with `kotlin [kotlin script file]`.
+It can be run with the command `kotlin [kotlin script file]`.
 
 * Kotlin is a statically typed language.
 Unlike DevOps scripts, DocOps scripts are more voluminous, and are more often modified as we change documentation structure rather often.
@@ -110,6 +111,12 @@ Static typing contributes greatly to the maintainability of such scripts.
 
 * Kotlin has an excellent support for builder and templating constructions, that that allows us to tune the outlook of resulting document by transforming AST in a desirable way.
 It is a good deal simpler than customizing the outlook with a huge number of options that nobody remembers.
+
+== Using for publishing consideration
+
+If you would like to use LibreOffice Writer for publishing consider the following issues.
+
+. LibreOffice ignores paragraph typography settings like window/orphan control or keeping together in table cells. With UniDoc Publisher you may style last row in a table to be unbreakable, but
 
 == Extension points
 

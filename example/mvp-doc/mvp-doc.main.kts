@@ -70,6 +70,7 @@ FodtConverter {
     html = AsciidocHtmlFactory.getHtmlFromFile(File("doc/pages/mvp.adoc"))
     odtStyleList = odtStyle
     template = File("${__FILE__.parent}/template.fodt").readText()
+    observedClassList = setOf("listingblock")
     parse()
     // tag::id-div-to-paragraph[]
     ast().descendant { it is OpenBlock && it.roles.contains("paragraph") }.forEach {
@@ -77,6 +78,10 @@ FodtConverter {
         it.id = null
     }
     // end::id-div-to-paragraph[]
+    ast().descendant { descendant ->
+        descendant.roles.contains("code") &&
+                descendant.ancestor { it.roles.contains("listingblock") }.isNotEmpty()
+    }.forEach { it.roles.remove("code") }
     ast2fodt()
     fodt().toFile("${__FILE__.parent}/output/mvp-doc.fodt")
 }

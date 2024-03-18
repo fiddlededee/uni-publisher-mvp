@@ -192,6 +192,7 @@ open class OdWriter(
     override fun write(span: Span) {
         preOdNode.apply {
             "text:span" {
+                if (span.roles.contains("code")) attribute("text:style-name", "Source Text")
                 textProperties {
                     if (span.roles.contains("em") or span.roles.contains("i")) {
                         attribute("fo:font-style", "italic")

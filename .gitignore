@@ -44,3 +44,5 @@ bin/
 
 todo.adoc
 test.fodt
+/example/mvp-doc/output/mvp-doc.html
+/example/mvp-doc/output/mvp-doc.yml
