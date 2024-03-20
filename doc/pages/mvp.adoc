@@ -116,8 +116,8 @@ It is a good deal simpler than customizing the outlook with a huge number of opt
 
 If you would like to use LibreOffice (LO) Writer for publishing consider the following issues.
 
-. LO Writer ignores paragraph typography settings like window/orphan control or keeping together with next paragraph within table cells. With UniDoc Publisher you may style last row in a table to be unbreakable, but nothing more.
-. You can't make table row keep together with the next row. You can't even make a cell keep on one page if it spans several rows.
+. LO Writer ignores paragraph typography settings like window/orphan control or keep with next paragraph within table cells. With UniDoc Publisher you may style last row in a table to be unbreakable, but nothing more.
+. You can't make a table row keep together with the next row. You can't even make a cell prevent from breaking if it spans several rows.
 . LibreOffice Writer makes a poor looking table of contents if the text heading can't be put in one line. Still with UniDoc Publisher you may automatically create your own table of contents which will look the proper way.
 . If you need to convert the document to MS Word, some tuning is needed. For example MS Word doesn't support margin after table. That's why for MS Word documents you should either define margin before the next paragraph (with UniDoc Publisher styling approach) or, if impossible, put after each table zero height paragraph with a margin after it.
 
