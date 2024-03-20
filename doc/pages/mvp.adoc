@@ -24,7 +24,7 @@ The prefix [Uni] means UniDoc Publisher (1) is quite [uni]versal (almost all mar
 
 === The goal of MVP
 
-The goal of MVP is to test the UniPublisher underlying ideas and implementation approach. I{nbsp}would be grateful for any critical comments.
+The goal of MVP is to test the UniDoc Publisher underlying ideas and implementation approach. I{nbsp}would be grateful for any critical comments.
 
 == Examples
 
@@ -35,7 +35,7 @@ Creates FODT file for this document from Asciidoc file link:{src-root}/doc/pages
 . link:{src-root}/example/ps-118/convert-to-pdf.main.kts[example/ps-118/convert-to-pdf.main.kts]
 +
 [[ps-118]]
-Parses HTML-files and unites them in one book of A4 format (link:{src-root}/example/ps-118/output/ps-118.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118.pdf[pdf]), and electronic book format (link:{src-root}/example/ps-118/output/ps-118-ebook.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting formatting for each format.
+Parses HTML-files and unites them in one book of A4 format (link:{src-root}/example/ps-118/output/ps-118.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118.pdf[pdf]), and the electronic book format (link:{src-root}/example/ps-118/output/ps-118-ebook.fodt[fodt], link:{src-root}/example/ps-118/output/ps-118-ebook.pdf[pdf]), adjusting the page layout for each format.
 +
 The text contains Holy Father Interpretaions for Psalm 118, taken from https://bible.optina.ru/.
 The site is made with the https://www.dokuwiki.org/[DokuWiki] engine.
@@ -76,7 +76,7 @@ Styles for HTML and printing format may differ significantly, still we often nee
 === Easily manipulated AST
 
 AST transformation with Kotlin is very easy, and along with the styling mechanism, it is suggested as the main tool for customizing output.
-Don't define sections for numerating chapters, just numerate them.
+Don't define rules for numerating chapters and sections, just numerate them.
 Don't define if the image caption should be above or below, just place it there.
 Don't define the way the title page should look, just create it the way you need.
 
